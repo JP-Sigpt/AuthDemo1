@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "E:\\Github\\AuthDemo1\\server\\server\\logs\\.8ac6d626430210d3939d8a82ff3f64f834670193-audit.json",
+    "files": [
+        {
+            "date": 1750688216694,
+            "name": "E:\\Github\\AuthDemo1\\server\\server\\logs\\app-2025-06-23.log",
+            "hash": "e8b7c42cf06e44bb4cd995acdf45e62a6953e7c6765a2d19e0f4b755a9b1c609"
+        }
+    ],
+    "hashType": "sha256"
+}
