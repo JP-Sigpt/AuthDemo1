@@ -1,7 +1,7 @@
-import User from "../models/user.model.js";
-import Otp from "../models/otp.model.js";
-import UserActivity from "../models/userActivity.model.js";
-import PasswordResetToken from "../models/passwordResetToken.model.js";
+import User from "../models/User.js";
+import Otp from "../models/Otp.js";
+import UserActivity from "../models/UserActivity.js";
+import PasswordResetToken from "../models/PasswordResetToken.js";
 
 import transporter from "../config/mailer.js";
 import { generateOTP } from "../utils/otpGenerator.js";

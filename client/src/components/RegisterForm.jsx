@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Loading from "./Loading";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 
 const RegisterForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
@@ -14,6 +15,7 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+  const { trackAuth, trackFormSubmit, trackError } = useAnalytics();
 
   const {
     register,
@@ -27,20 +29,44 @@ const RegisterForm = () => {
 
   const onSubmit = async (data) => {
     try {
+      // Track form submission
+      trackFormSubmit('register', {
+        has_work: !!data.work,
+        username_length: data.username?.length || 0
+      });
+
       const response = await registerUser(data);
 
       if (response.status === 201) {
+        // Track successful registration
+        trackAuth('register', {
+          success: true,
+          has_work: !!data.work
+        });
+
         reset();
         setSuccessMessage(response.data.message);
         navigate("/login");
       } else {
         setErrorMessage(response.data.message);
+        // Track registration error
+        trackError(new Error(response.data.message), { context: 'register_form' });
       }
     } catch (error) {
       if (error.response && error.response.data) {
         setErrorMessage(error.response.data.message);
+        // Track registration error
+        trackError(error, {
+          context: 'register_form',
+          error_type: 'api_error'
+        });
       } else {
         setErrorMessage("An unexpected error occurred");
+        // Track unexpected error
+        trackError(error, {
+          context: 'register_form',
+          error_type: 'unexpected_error'
+        });
       }
     }
   };

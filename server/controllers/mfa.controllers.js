@@ -2,6 +2,7 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 export const setupMfa = async (req, res) => {
   try {

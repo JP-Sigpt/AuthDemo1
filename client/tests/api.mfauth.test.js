@@ -1,4 +1,4 @@
-import { setup2Fa, verify2Fa, reset2Fa } from "./api.mfauth";
+import { setup2Fa, verify2Fa, reset2Fa } from "../src/services/api.mfauth.js";
 
 describe("api.mfauth", () => {
   it("should export setup2Fa", () => {

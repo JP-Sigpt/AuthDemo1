@@ -1,7 +1,9 @@
 export default {
   testEnvironment: "jsdom",
   moduleFileExtensions: ["js", "jsx"],
-  transform: {},
-  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
+  transform: {
+    "^.+\\.(js|jsx)$": "babel-jest",
+  },
+  setupFilesAfterEnv: ["@testing-library/jest-dom"],
   testMatch: ["<rootDir>/tests/**/*.(test|spec).[jt]s?(x)"],
 };

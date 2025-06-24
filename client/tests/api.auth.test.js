@@ -5,7 +5,7 @@ import {
   logoutUser,
   refreshAccessToken,
   verifyLoginOtp,
-} from "./api.auth";
+} from "../src/services/api.auth.js";
 
 describe("api.auth", () => {
   it("should export registerUser", () => {

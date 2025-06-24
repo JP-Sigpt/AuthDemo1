@@ -3,7 +3,7 @@ import {
   verifyLoginOtp,
   forgotPassword,
   resetPassword,
-} from "./api.otp";
+} from "../src/services/api.otp.js";
 
 describe("api.otp", () => {
   it("should export verifyOtp", () => {
