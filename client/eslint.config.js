@@ -34,7 +34,25 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
+
+      // Suppress common harmless React warnings
       "react/jsx-no-target-blank": "off",
+      "react/prop-types": "off", // disable if using TypeScript or not using prop-types
+      "react/no-unescaped-entities": "warn", // don't fail builds on `'`
+
+      // Allow unused vars for React and prefixed args
+      "no-unused-vars": [
+        "warn",
+        {
+          vars: "all",
+          args: "after-used",
+          ignoreRestSiblings: true,
+          varsIgnorePattern: "^React$|^Header$", // suppress React/Header unused import warnings
+          argsIgnorePattern: "^_", // suppress _error, _args, etc.
+        },
+      ],
+
+      // Allow non-component exports in the same file (for context, constants)
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
@@ -42,7 +60,7 @@ export default [
     },
   },
 
-  // Test & setup files: enable Jest globals
+  // Jest test/setup files: enable Node + Jest globals
   {
     files: ["**/*.test.js", "**/*.test.jsx", "**/jest*.js"],
     languageOptions: {
@@ -52,7 +70,7 @@ export default [
       },
     },
     rules: {
-      "no-unused-vars": "off", // avoid false positives in setup files
+      "no-unused-vars": "off",
     },
   },
 ];

@@ -6,6 +6,7 @@ import { SESSION_DURATION, isSessionExpired as checkSessionExpired } from "./ses
 
 const SessionContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSession = () => useContext(SessionContext);
 
 export const SessionProvider = ({ children }) => {
