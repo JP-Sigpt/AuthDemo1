@@ -8,3 +8,24 @@
 2025-06-26T06:05:34.594Z [INFO]: POST /api/auth/verify-login-otp - - - - ms 
 2025-06-26T07:17:09.476Z [INFO]: OPTIONS /api/auth/login 204 0 - 31.374 ms 
 2025-06-26T07:17:13.771Z [INFO]: POST /api/auth/login - - - - ms 
+2025-06-26T10:08:07.126Z [INFO]: === ENVIRONMENT VARIABLES === 
+2025-06-26T10:08:07.163Z [INFO]: MONGO_DB_URL: mongodb+srv://jpanimenaruto27:ZppnpHrTycxzBELE@cluster0.xnuvsfk.mongodb.net/mfa-auth-db?retryWrites=true&w=majority 
+2025-06-26T10:08:07.175Z [INFO]: PORT: 7001 
+2025-06-26T10:08:07.176Z [INFO]: JWT_SECRET: 488c3cfd3569cfe4804a99d7331db6fc64fdc782401560795b7548ebbaa9a482 
+2025-06-26T10:08:07.177Z [INFO]: EMAIL_USER: jayaprakash.v@si-gpt.com 
+2025-06-26T10:08:07.178Z [INFO]: EMAIL_PASS exists: true 
+2025-06-26T10:08:07.179Z [INFO]: EMAIL_PASS length: 16 
+2025-06-26T10:08:07.181Z [INFO]: ============================== 
+2025-06-26T10:08:07.401Z [INFO]: Server running on port 7001 
+2025-06-26T10:14:44.805Z [INFO]: OPTIONS /api/auth/login 204 0 - 8.089 ms 
+2025-06-26T10:14:48.699Z [INFO]: POST /api/auth/login 200 565 - 3851.583 ms 
+2025-06-26T10:15:18.758Z [INFO]: OPTIONS /api/auth/verify-login-otp 204 0 - 0.264 ms 
+2025-06-26T10:15:18.948Z [INFO]: POST /api/auth/verify-login-otp 200 913 - 187.805 ms 
+2025-06-26T10:15:22.783Z [INFO]: OPTIONS /api/auth/logout 204 0 - 0.164 ms 
+2025-06-26T10:15:22.879Z [INFO]: POST /api/auth/logout 200 31 - 94.841 ms 
+2025-06-26T10:15:29.812Z [INFO]: OPTIONS /api/auth/login 204 0 - 0.142 ms 
+2025-06-26T10:15:29.948Z [INFO]: POST /api/auth/login 200 559 - 133.538 ms 
+2025-06-26T10:15:43.813Z [INFO]: OPTIONS /api/auth/mfa/verify 204 0 - 0.140 ms 
+2025-06-26T10:15:43.911Z [INFO]: POST /api/auth/mfa/verify 200 906 - 95.671 ms 
+2025-06-26T10:15:47.195Z [INFO]: OPTIONS /api/auth/logout 204 0 - 0.274 ms 
+2025-06-26T10:15:47.291Z [INFO]: POST /api/auth/logout 200 31 - 93.343 ms 

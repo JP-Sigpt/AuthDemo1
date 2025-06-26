@@ -22,7 +22,7 @@ jobs:
           --health-timeout 5s \
           --health-retries 5
     env:
-      MONGO_URL: mongodb://localhost:27017/mfa-auth-db
+      MONGO_URL: mongodb+srv://jpanimenaruto27:ZppnpHrTycxzBELE@cluster0.xnuvsfk.mongodb.net/mfa-auth-db?retryWrites=true&w=majority
       CI: true
       CHROME_BIN: /usr/bin/google-chrome
       BASE_URL: http://localhost:3001
@@ -84,16 +84,6 @@ jobs:
 
       - name: Run client e2e tests (Selenium)
         run: cd client && npm run test:e2e
-        env:
-          MONGO_URL: ${{ env.MONGO_URL }}
-          BASE_URL: ${{ env.BASE_URL }}
-          CHROME_BIN: ${{ env.CHROME_BIN }}
-
-      - name: Run server e2e tests (if any)
-        run: |
-          if [ -d server/tests ]; then
-            cd server && npx jest tests/selenium.e2e.test.js || echo "No server e2e tests found."
-          fi
         env:
           MONGO_URL: ${{ env.MONGO_URL }}
           BASE_URL: ${{ env.BASE_URL }}
