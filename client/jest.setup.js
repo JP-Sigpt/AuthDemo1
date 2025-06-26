@@ -1,26 +1,46 @@
-// jest.setup.js (ESM-compatible)
-import { TextEncoder, TextDecoder } from "util";
-import { setTimeout } from "timers/promises";
+// jest.setup.js (CommonJS-friendly)
+const { TextEncoder, TextDecoder } = require("util");
 
 globalThis.TextEncoder = TextEncoder;
 globalThis.TextDecoder = TextDecoder;
 
 if (typeof globalThis.fetch === "undefined") {
   try {
-    const fetch = await import("node-fetch");
-    globalThis.fetch = fetch.default;
+    globalThis.fetch = require("node-fetch");
   } catch (e) {
     console.warn("⚠️ Failed to polyfill fetch:", e.message);
   }
 }
 
-// Jest environment config
 jest.setTimeout(30000);
 
-// Handle unhandled promise rejections
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });
+
+// // jest.setup.js (ESM-compatible)
+// import { TextEncoder, TextDecoder } from "util";
+// import { setTimeout } from "timers/promises";
+
+// globalThis.TextEncoder = TextEncoder;
+// globalThis.TextDecoder = TextDecoder;
+
+// if (typeof globalThis.fetch === "undefined") {
+//   try {
+//     const fetch = await import("node-fetch");
+//     globalThis.fetch = fetch.default;
+//   } catch (e) {
+//     console.warn("⚠️ Failed to polyfill fetch:", e.message);
+//   }
+// }
+
+// // Jest environment config
+// jest.setTimeout(30000);
+
+// // Handle unhandled promise rejections
+// process.on("unhandledRejection", (reason, promise) => {
+//   console.error("Unhandled Rejection at:", promise, "reason:", reason);
+// });
 
 // // jest.setup.js
 // const { TextEncoder, TextDecoder } = require("util");

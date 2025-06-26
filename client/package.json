@@ -3,18 +3,18 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint .",
-    "test": "jest --config jest.config.js",
-    "test:unit": "jest --config jest.config.cjs --selectProjects client",
-    "test:e2e": "jest --config jest.config.cjs --selectProjects e2e",
-    "test:e2e:windows": "jest --config jest.config.cjs --selectProjects e2e",
-    "test:coverage": "jest --config jest.config.cjs --coverage --selectProjects client",
-    "test:watch": "jest --config jest.config.cjs --watch --selectProjects client"
-  },
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "lint": "eslint .",
+  "test": "jest --config jest.config.cjs",
+  "test:unit": "jest --config jest.config.cjs --selectProjects client",
+  "test:e2e": "jest --config jest.config.cjs --selectProjects e2e",
+  "test:e2e:windows": "jest --config jest.config.cjs --selectProjects e2e",
+  "test:coverage": "jest --config jest.config.cjs --coverage --selectProjects client",
+  "test:watch": "jest --config jest.config.cjs --watch --selectProjects client"
+},
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "axios": "^1.7.7",
