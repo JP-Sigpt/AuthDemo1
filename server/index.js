@@ -41,11 +41,13 @@ app.use("/test", (req, res) => {
 app.use("/api/auth", authRoutes);
 
 // Only start the server if not in test mode
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== "test" && process.env.CI !== "true") {
   const PORT = process.env.PORT || 7001;
   app.listen(PORT, () => {
     logger.info(`Server running on port ${PORT}`);
   });
+} else {
+  process.exit(1);
 }
 
 export default app;
