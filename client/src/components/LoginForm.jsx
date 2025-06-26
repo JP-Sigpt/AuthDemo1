@@ -11,13 +11,13 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import VerifyModal from "./VerifyModal";
 import { useNavigate } from "react-router-dom";
 import { useAnalytics } from "../hooks/useAnalytics.js";
-import PropTypes from "prop-types";
 
 const LoginForm = ({ onSuccess, accessToken }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [mfaRequired, setMfaRequired] = useState(null);
   const [email, setEmail] = useState("");
+  const [sessionId, setSessionId] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState("otp");
   const navigate = useNavigate();
   const { trackAuth, trackFormSubmit, trackError } = useAnalytics();
@@ -45,6 +45,7 @@ const LoginForm = ({ onSuccess, accessToken }) => {
       const { data } = await loginUser({ ...userData, method: selectedMethod });
       if (data.success) {
         setEmail(userData.email);
+        setSessionId(data.sessionId || null);
 
         if (selectedMethod === "app" && data.mfaSetup) {
           // Track MFA setup initiation
@@ -207,11 +208,6 @@ const LoginForm = ({ onSuccess, accessToken }) => {
       )}
     </>
   );
-};
-
-LoginForm.propTypes = {
-  onSuccess: PropTypes.func.isRequired,
-  accessToken: PropTypes.string,
 };
 
 export default LoginForm;

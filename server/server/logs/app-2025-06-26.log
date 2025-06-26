@@ -29,3 +29,11 @@
 2025-06-26T10:15:43.911Z [INFO]: POST /api/auth/mfa/verify 200 906 - 95.671 ms 
 2025-06-26T10:15:47.195Z [INFO]: OPTIONS /api/auth/logout 204 0 - 0.274 ms 
 2025-06-26T10:15:47.291Z [INFO]: POST /api/auth/logout 200 31 - 93.343 ms 
+2025-06-26T11:17:59.128Z [INFO]: OPTIONS /api/auth/login 204 0 - 14.020 ms 
+2025-06-26T11:18:03.187Z [INFO]: POST /api/auth/login 200 490 - 4012.923 ms 
+2025-06-26T11:18:04.292Z [INFO]: OPTIONS /api/auth/verify-login-otp 204 0 - 0.217 ms 
+2025-06-26T11:18:04.483Z [INFO]: POST /api/auth/verify-login-otp 200 930 - 176.362 ms 
+2025-06-26T11:22:55.958Z [INFO]: OPTIONS /api/auth/login 204 0 - 9.269 ms 
+2025-06-26T11:22:59.702Z [INFO]: POST /api/auth/login 200 490 - 3706.925 ms 
+2025-06-26T11:23:00.957Z [INFO]: OPTIONS /api/auth/verify-login-otp 204 0 - 0.260 ms 
+2025-06-26T11:23:01.217Z [INFO]: POST /api/auth/verify-login-otp 200 930 - 257.649 ms 
