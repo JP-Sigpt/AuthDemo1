@@ -1,6 +1,8 @@
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-const validator = require("validator");
+import validator from "validator";
+
+// import { createRequire } from "node:module";
+// const require = createRequire(import.meta.url);
+// const validator = require("validator");
 
 export const validateSignup = (req, res, next) => {
   const { username, email, work, password } = req.body;

@@ -1,5 +1,6 @@
+import React from "react";
 import { render, screen } from '@testing-library/react';
-import { SessionProvider } from './SessionContext';
+import { SessionProvider } from '../src/contexts/SessionContext.jsx';
 
 describe('SessionContext', () => {
 	it('provides session context', () => {

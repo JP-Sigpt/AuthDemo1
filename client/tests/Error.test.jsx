@@ -1,5 +1,6 @@
+import React from "react";
 import { render, screen } from '@testing-library/react';
-import Error from './Error';
+import Error from '../src/pages/Error.jsx';
 
 describe('Error', () => {
 	it('renders error message', () => {

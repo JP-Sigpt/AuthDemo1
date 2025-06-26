@@ -1,4 +1,6 @@
-// eslint-disable-next-line react/prop-types
+import React from "react";
+
+
 function TextHeader({ title, subtitle, icon: Icon, variant }) {
   return (
     <div className="flex flex-col items-center gap-2">
@@ -7,7 +9,7 @@ function TextHeader({ title, subtitle, icon: Icon, variant }) {
           <Icon size={30} className={`text-${variant}`} />
         </div>
       )}
-      <h1 className="text-lg font-bold text-black">{title}</h1>
+      <h1 id="verify-modal-title" className="text-lg font-bold text-black">{title}</h1>
       <p className="text-sm text-gray-500 w-3/4 text-center">{subtitle}</p>
     </div>
   );

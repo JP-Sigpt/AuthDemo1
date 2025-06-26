@@ -1,9 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import ForgotPasswordPage from './ForgotPasswordPage';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import ForgotPasswordPage from "../src/pages/ForgotPasswordPage";
 
-describe('ForgotPasswordPage', () => {
-	it('renders forgot password form', () => {
+describe("ForgotPasswordPage", () => {
+	it("renders forgot password form", () => {
 		render(<ForgotPasswordPage />);
-		expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+		expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: /send reset link/i })).toBeInTheDocument();
 	});
 });

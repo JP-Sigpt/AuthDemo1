@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import useBackToRoot from "./useBackToRoot";
+import useBackToRoot from "../src/hooks/useBackToRoot.js";
 
 describe("useBackToRoot", () => {
   it("should be defined", () => {

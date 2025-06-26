@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -112,12 +113,13 @@ const LoginForm = ({ onSuccess, accessToken }) => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="w-full">
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
             type="email"
             placeholder="Your email"
             autoComplete="false"
             id="email"
+            name="email"
             {...register("email")}
             className="w-full block rounded-lg bg-slate-50 p-2 border-2 border-gray-200"
           />
@@ -125,7 +127,7 @@ const LoginForm = ({ onSuccess, accessToken }) => {
         </div>
 
         <div className="relative w-full">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
             autoComplete="false"
             placeholder="••••••••••"

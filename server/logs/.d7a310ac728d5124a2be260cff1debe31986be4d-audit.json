@@ -14,6 +14,11 @@
             "date": 1750748476229,
             "name": "E:\\Github\\AuthDemo1\\server\\logs\\error-2025-06-24.log",
             "hash": "cc7e2701c6cb77fb8dfbff36308f110fcc123c2ee8367ea07149fd903551fb03"
+        },
+        {
+            "date": 1750824990492,
+            "name": "E:\\Github\\AuthDemo1\\server\\logs\\error-2025-06-25.log",
+            "hash": "1142bbb83a73a5c52bc80bfc9bd461b5ac00ad4d9dbe83bad26348704f37e1ce"
         }
     ],
     "hashType": "sha256"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { verifyOtp, verifyLoginOtp } from "../api.otp.js";
+import { verifyOtp, verifyLoginOtp } from "../services/api.otp.js";
 
 const OtpVerificationForm = ({ email, isLoginOtp = false }) => {
 	const [otp, setOtp] = useState(new Array(6).fill(""));

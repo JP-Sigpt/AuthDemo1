@@ -1,10 +1,20 @@
-import { render } from '@testing-library/react';
-import ProtectedAdminRoute from './ProtectedAdminRoute';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
+import ProtectedAdminRoute from "../src/components/ProtectedAdminRoute";
 
-describe('ProtectedAdminRoute', () => {
-	it('renders children if admin', () => {
-		// Mock context/provider as needed
-		const { getByText } = render(<ProtectedAdminRoute><div>Admin</div></ProtectedAdminRoute>);
-		expect(getByText('Admin')).toBeInTheDocument();
+describe("ProtectedAdminRoute", () => {
+	it("renders children if admin", () => {
+		render(
+			<MemoryRouter initialEntries={["/admin"]}>
+				<Routes>
+					<Route element={<ProtectedAdminRoute />}>
+						<Route path="/admin" element={<div>Admin</div>} />
+					</Route>
+				</Routes>
+			</MemoryRouter>
+		);
+
+		expect(screen.getByText("Admin")).toBeInTheDocument();
 	});
 });

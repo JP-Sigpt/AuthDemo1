@@ -1,3 +1,4 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../types/schema";
@@ -85,7 +86,7 @@ const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="p-10 py-2  text-black">
       <div className="mb-4 w-full">
-        <label>Email</label>
+        <label htmlFor="email">Email</label>
         <input
           type="email"
           placeholder="Your email"
@@ -128,7 +129,7 @@ const RegisterForm = () => {
       </div>
 
       <div className="mb-4 relative w-full">
-        <label>Password</label>
+        <label htmlFor="password">Password</label>
         <input
           type={showPassword ? "text" : "password"}
           placeholder="••••••••••"

@@ -9,6 +9,16 @@
             "date": 1750688216694,
             "name": "E:\\Github\\AuthDemo1\\server\\server\\logs\\app-2025-06-23.log",
             "hash": "e8b7c42cf06e44bb4cd995acdf45e62a6953e7c6765a2d19e0f4b755a9b1c609"
+        },
+        {
+            "date": 1750834136569,
+            "name": "E:\\Github\\AuthDemo1\\server\\server\\logs\\app-2025-06-25.log",
+            "hash": "8eb8c87b5910ac5ccf1e50757f3f63380b4d2f75c2a2bf031eddd66ec564a827"
+        },
+        {
+            "date": 1750915604605,
+            "name": "E:\\Github\\AuthDemo1\\server\\server\\logs\\app-2025-06-26.log",
+            "hash": "f5d0195303e76b42c31fbe9575ba9d2ae1cb8f9455fe0a1c74fe3be1a79525ad"
         }
     ],
     "hashType": "sha256"

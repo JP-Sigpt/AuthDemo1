@@ -1,10 +1,17 @@
 {
   "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "mongodb": "^4.15.0",
     "morgan": "^1.10.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.3"
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "babel-jest": "^30.0.2",
+    "jest": "^30.0.3"
   }
 }

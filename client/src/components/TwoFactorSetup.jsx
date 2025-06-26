@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { HiOutlineQrcode } from "react-icons/hi";
 import { TbCopy } from "react-icons/tb";

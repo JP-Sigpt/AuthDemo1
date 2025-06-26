@@ -1,12 +1,10 @@
 import winston from "winston";
 import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import DailyRotateFile from "winston-daily-rotate-file";
 import { LogstashTransport } from "winston-logstash-transport";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const logDir = path.join(__dirname, "../logs");
+// Use static relative path for logs directory
+const logDir = path.resolve("./server/logs");
 
 const logger = winston.createLogger({
   level: "info",
