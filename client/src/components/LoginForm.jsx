@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +10,7 @@ import { motion } from "framer-motion";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import VerifyModal from "./VerifyModal";
 import { useNavigate } from "react-router-dom";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 
 const LoginForm = ({ onSuccess, accessToken }) => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -18,6 +20,7 @@ const LoginForm = ({ onSuccess, accessToken }) => {
   const [sessionId, setSessionId] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState("otp");
   const navigate = useNavigate();
+  const { trackAuth, trackFormSubmit, trackError } = useAnalytics();
 
   const {
     register,
@@ -36,12 +39,18 @@ const LoginForm = ({ onSuccess, accessToken }) => {
 
   const onSubmit = async (userData) => {
     try {
+      // Track form submission
+      trackFormSubmit('login', { method: selectedMethod });
+
       const { data } = await loginUser({ ...userData, method: selectedMethod });
       if (data.success) {
         setEmail(userData.email);
         setSessionId(data.sessionId || null);
 
         if (selectedMethod === "app" && data.mfaSetup) {
+          // Track MFA setup initiation
+          trackAuth('mfaSetup', { method: 'app' });
+
           // User needs to set up MFA (show QR code)
           navigate("/setup-2fa", {
             state: {
@@ -53,6 +62,9 @@ const LoginForm = ({ onSuccess, accessToken }) => {
             },
           });
         } else if (selectedMethod === "app" && data.mfaRequired) {
+          // Track MFA verification initiation
+          trackAuth('mfaVerify', { method: 'app' });
+
           // User already has MFA active, go directly to OTP verification
           navigate("/verify", {
             state: {
@@ -62,23 +74,35 @@ const LoginForm = ({ onSuccess, accessToken }) => {
             },
           });
         } else if (selectedMethod === "otp") {
+          // Track OTP method selection
+          trackAuth('login', { method: 'otp' });
+
           // Email OTP flow
           setMfaRequired(false);
         }
       } else {
         setErrorMessage(data.message);
+        // Track login error
+        trackError(new Error(data.message), { context: 'login_form' });
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Login failed.");
+      // Track login error
+      trackError(error, { context: 'login_form' });
     }
   };
 
   const handleOtpVerify = async (data) => {
     if (data.message === "Login successful") {
+      // Track successful login
+      trackAuth('login', { method: 'otp', success: true });
+
       onSuccess(data);
       setMfaRequired(null);
     } else {
       setErrorMessage("Invalid OTP");
+      // Track OTP verification error
+      trackError(new Error("Invalid OTP"), { context: 'otp_verification' });
     }
   };
 
@@ -89,12 +113,13 @@ const LoginForm = ({ onSuccess, accessToken }) => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="w-full">
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
             type="email"
             placeholder="Your email"
             autoComplete="false"
             id="email"
+            name="email"
             {...register("email")}
             className="w-full block rounded-lg bg-slate-50 p-2 border-2 border-gray-200"
           />
@@ -102,7 +127,7 @@ const LoginForm = ({ onSuccess, accessToken }) => {
         </div>
 
         <div className="relative w-full">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
             autoComplete="false"
             placeholder="••••••••••"

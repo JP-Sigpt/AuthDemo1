@@ -232,15 +232,22 @@ export const verifyLoginOtp = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    let otpRecord;
-    if (isMfa) {
-      return res.status(400).json({ error: "Use MFA verification endpoint" });
-    } else {
-      otpRecord = await Otp.findOneAndDelete({ userId: user._id, otp });
-    }
+    // ✅ Bypass OTP for a known test user
+    const isBypassUser = email === "test@example.com";
 
-    if (!otpRecord)
-      return res.status(400).json({ error: "Invalid or expired OTP" });
+    if (isBypassUser) {
+      console.log("🔓 Bypassing OTP verification for test user");
+    } else {
+      if (isMfa) {
+        return res.status(400).json({ error: "Use MFA verification endpoint" });
+      }
+
+      const otpRecord = await Otp.findOneAndDelete({ userId: user._id, otp });
+
+      if (!otpRecord) {
+        return res.status(400).json({ error: "Invalid or expired OTP" });
+      }
+    }
 
     user.isVerified = true;
     await user.save();
@@ -256,6 +263,7 @@ export const verifyLoginOtp = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
+
     const refreshToken = jwt.sign(
       {
         id: user._id,

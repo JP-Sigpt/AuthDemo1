@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { verifyLoginOtp } from "../services/api.auth";
 import { verify2Fa } from "../services/api.mfauth";
@@ -55,7 +56,13 @@ const VerifyModal = ({ handleClose, email, method, onVerify, sessionId }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.6)] flex justify-center items-center z-50">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="verify-modal-title"
+      className="fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.6)] flex justify-center items-center z-50"
+    >
+
       <div className="w-[420px] h-auto mx-2 sm:mx-auto rounded-xl bg-gradient-to-b from-blue-100/90 via-slate-100 to-white border-2 p-2 sm:p-10 flex justify-center items-center flex-col">
         <div className="text-center mb-4 flex flex-col">
           <TextHeader

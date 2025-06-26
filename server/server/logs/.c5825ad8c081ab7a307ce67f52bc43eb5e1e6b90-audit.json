@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "E:\\Github\\AuthDemo1\\server\\server\\logs\\.c5825ad8c081ab7a307ce67f52bc43eb5e1e6b90-audit.json",
+    "files": [
+        {
+            "date": 1750688216700,
+            "name": "E:\\Github\\AuthDemo1\\server\\server\\logs\\error-2025-06-23.log",
+            "hash": "74db1e22e5a69abeace0874a27d3a82eb92d9e0a2efc82d617f10e45bd801089"
+        },
+        {
+            "date": 1750834136577,
+            "name": "E:\\Github\\AuthDemo1\\server\\server\\logs\\error-2025-06-25.log",
+            "hash": "904e94f3c0d87316d26666606ac14cd52390beb02a6315e57312e4b4fdba84a6"
+        }
+    ],
+    "hashType": "sha256"
+}

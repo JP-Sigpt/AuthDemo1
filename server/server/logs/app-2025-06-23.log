@@ -1,0 +1,13 @@
+2025-06-23T14:16:56.907Z [INFO]: === ENVIRONMENT VARIABLES === 
+2025-06-23T14:16:56.911Z [INFO]: MONGO_DB_URL: mongodb+srv://jpanimenaruto27:ZppnpHrTycxzBELE@cluster0.xnuvsfk.mongodb.net/mfa-auth-db?retryWrites=true&w=majority 
+2025-06-23T14:16:56.912Z [INFO]: PORT: 7001 
+2025-06-23T14:16:56.913Z [INFO]: JWT_SECRET: 488c3cfd3569cfe4804a99d7331db6fc64fdc782401560795b7548ebbaa9a482 
+2025-06-23T14:16:56.915Z [INFO]: EMAIL_USER: raj735n@gmail.com 
+2025-06-23T14:16:56.916Z [INFO]: EMAIL_PASS exists: true 
+2025-06-23T14:16:56.917Z [INFO]: EMAIL_PASS length: 16 
+2025-06-23T14:16:56.917Z [INFO]: ============================== 
+2025-06-23T14:16:56.957Z [INFO]: Server running on port 7001 
+2025-06-23T14:19:49.217Z [INFO]: OPTIONS /api/auth/login 204 0 - 6.062 ms 
+2025-06-23T14:19:49.657Z [INFO]: POST /api/auth/login 200 559 - 433.257 ms 
+2025-06-23T14:25:46.166Z [INFO]: OPTIONS /api/auth/login 204 0 - 1.124 ms 
+2025-06-23T14:25:46.499Z [INFO]: POST /api/auth/login 200 559 - 325.679 ms 

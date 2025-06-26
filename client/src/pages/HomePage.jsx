@@ -1,3 +1,4 @@
+import React from "react";
 import Header from "../components/Header.jsx";
 import { useSession } from "../contexts/SessionContext.jsx";
 

@@ -1,8 +1,11 @@
+import React from 'react';
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import { useEffect, useState } from "react";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 
 const Layout = () => {
+  useAnalytics();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
