@@ -109,3 +109,16 @@
 2025-06-26T12:23:21.083Z [INFO]: EMAIL_PASS length: 16 
 2025-06-26T12:23:21.084Z [INFO]: ============================== 
 2025-06-26T12:23:21.107Z [INFO]: Server running on port 7001 
+2025-06-26T12:50:53.448Z [INFO]: OPTIONS /api/auth/login 204 0 - 23.569 ms 
+2025-06-26T12:50:58.019Z [INFO]: POST /api/auth/login 200 490 - 4524.218 ms 
+2025-06-26T12:50:58.781Z [INFO]: OPTIONS /api/auth/verify-login-otp 204 0 - 0.223 ms 
+2025-06-26T12:50:58.907Z [INFO]: POST /api/auth/verify-login-otp - - - - ms 
+2025-06-26T12:56:20.922Z [INFO]: === ENVIRONMENT VARIABLES === 
+2025-06-26T12:56:20.926Z [INFO]: MONGO_DB_URL: mongodb+srv://jpanimenaruto27:ZppnpHrTycxzBELE@cluster0.xnuvsfk.mongodb.net/mfa-auth-db?retryWrites=true&w=majority 
+2025-06-26T12:56:20.927Z [INFO]: PORT: 7001 
+2025-06-26T12:56:20.927Z [INFO]: JWT_SECRET: 488c3cfd3569cfe4804a99d7331db6fc64fdc782401560795b7548ebbaa9a482 
+2025-06-26T12:56:20.928Z [INFO]: EMAIL_USER: jayaprakash.v@si-gpt.com 
+2025-06-26T12:56:20.928Z [INFO]: EMAIL_PASS exists: true 
+2025-06-26T12:56:20.929Z [INFO]: EMAIL_PASS length: 16 
+2025-06-26T12:56:20.929Z [INFO]: ============================== 
+2025-06-26T12:56:20.960Z [INFO]: Server running on port 7001 
