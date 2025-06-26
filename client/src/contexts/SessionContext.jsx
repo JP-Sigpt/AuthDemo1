@@ -2,6 +2,7 @@ import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { refreshAccessToken } from "../services/api.auth";
 import { reset2Fa } from "../services/api.mfauth";
+import { SESSION_DURATION, isSessionExpired as checkSessionExpired } from "./sessionUtils";
 
 const SessionContext = createContext();
 
@@ -14,62 +15,13 @@ export const SessionProvider = ({ children }) => {
   const [isVerified, setIsVerified] = useState(false);
   const [mfaRequired, setMfaRequired] = useState(false); // New state for MFA requirement
 
-  const SESSION_DURATION = 3600000; // 1 hour
-
-  // const SESSION_DURATION = 120; // 120 seconds
-
-
-  const isSessionExpired = async () => {
-    const expiration = localStorage.getItem("expiration");
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (!expiration || !storedUser) return true;
-
-    const expired = Date.now() > parseInt(expiration, 10);
-
-    if (expired) {
-      try {
-        const response = await refreshAccessToken(storedUser.refreshToken);
-
-        const newAccessToken = response.data.accessToken;
-        const newExpiration = Date.now() + SESSION_DURATION;
-
-        const updatedUser = {
-          ...storedUser,
-          accessToken: newAccessToken,
-        };
-
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        localStorage.setItem("expiration", newExpiration);
-
-        setUser(updatedUser);
-        setIsLogin(true);
-        setIsVerified(!!updatedUser.isVerified);
-        setMfaRequired(!updatedUser.isVerified && updatedUser.mfaEnabled);
-
-
-        return false; // Not expired
-      } catch (err) {
-        localStorage.removeItem("user");
-        localStorage.removeItem("expiration");
-        setIsLogin(false);
-        setIsVerified(false);
-        setMfaRequired(false);
-        setUser(null);
-        return true; // Still expired
-      }
-    }
-
-    return false; // Not expired
-  };
-
   useEffect(() => {
     const checkSession = async () => {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       const expiration = localStorage.getItem("expiration");
 
       if (storedUser && expiration) {
-        const expired = await isSessionExpired();
+        const expired = await checkSessionExpired();
 
         if (!expired) {
           setIsLogin(true);
@@ -90,8 +42,6 @@ export const SessionProvider = ({ children }) => {
       }
 
       setLoading(false);
-      // Debug log
-      // console.log("[SessionContext] checkSession, user:", storedUser);
     };
 
     checkSession();
@@ -109,9 +59,6 @@ export const SessionProvider = ({ children }) => {
       refreshToken,
       sessionId,
     };
-
-    // Debug log
-    // console.log("[SessionContext] login() called with user:", fullUser);
 
     setIsLogin(true);
     setIsVerified(!!fullUser.isVerified);
@@ -169,9 +116,8 @@ export const SessionProvider = ({ children }) => {
         login,
         logout,
         completeMFA,
-        isSessionExpired,
+        isSessionExpired: checkSessionExpired,
         accessToken: user?.accessToken,
-        // Computed properties for easier use
         isAuthenticated: isLogin && isVerified,
         needsMFA: isLogin && !isVerified && mfaRequired,
       }}

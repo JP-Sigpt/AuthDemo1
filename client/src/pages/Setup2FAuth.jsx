@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import TwoFactorSetup from "../components/TwoFactorSetup";
 import useBackToRoot from "../hooks/useBackToRoot";
@@ -19,30 +18,7 @@ const Setup2FAuth = () => {
   const [isSetupConfirmed, setIsSetupConfirmed] = useState(false);
   const [error, setError] = useState(null); // Error state for debugging
 
-  useEffect(() => {
-    if (!location.state) {
-      console.error("No state data received in /setup-2fa");
-      setError("No state data available");
-    } else if (method === "otp") {
-      navigate("/verify", { state: { email, method: "otp", accessToken } });
-    } else if (method === "app" && !qrImageUrl) {
-      fetchQRCode();
-    } else {
-      setLoading(false);
-    }
-  }, [accessToken, method, qrImageUrl, navigate, email, sessionId, location.state]);
-
-  useEffect(() => {
-    const handleSessionUpdate = () => {
-      if (method === "app" && !qrImageUrl) {
-        fetchQRCode();
-      }
-    };
-    window.addEventListener("sessionUpdate", handleSessionUpdate);
-    return () => window.removeEventListener("sessionUpdate", handleSessionUpdate);
-  }, [method, qrImageUrl]);
-
-  const fetchQRCode = async () => {
+  const fetchQRCode = useCallback(async () => {
     if (!accessToken) {
       console.error("No access token available");
       setLoading(false);
@@ -57,7 +33,30 @@ const Setup2FAuth = () => {
       setError(error.message);
       setLoading(false);
     }
-  };
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!location.state) {
+      console.error("No state data received in /setup-2fa");
+      setError("No state data available");
+    } else if (method === "otp") {
+      navigate("/verify", { state: { email, method: "otp", accessToken } });
+    } else if (method === "app" && !qrImageUrl) {
+      fetchQRCode();
+    } else {
+      setLoading(false);
+    }
+  }, [accessToken, method, qrImageUrl, navigate, email, sessionId, location.state, fetchQRCode]);
+
+  useEffect(() => {
+    const handleSessionUpdate = () => {
+      if (method === "app" && !qrImageUrl) {
+        fetchQRCode();
+      }
+    };
+    window.addEventListener("sessionUpdate", handleSessionUpdate);
+    return () => window.removeEventListener("sessionUpdate", handleSessionUpdate);
+  }, [method, qrImageUrl, fetchQRCode]);
 
   const handleContinue = () => {
     navigate("/verify", {

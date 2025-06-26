@@ -1,12 +1,12 @@
 // jest.setup.js
 const { TextEncoder, TextDecoder } = require("util");
 
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+globalThis.TextEncoder = TextEncoder;
+globalThis.TextDecoder = TextDecoder;
 
-if (typeof global.fetch === "undefined") {
+if (typeof globalThis.fetch === "undefined") {
   try {
-    global.fetch = require("node-fetch");
+    globalThis.fetch = require("node-fetch");
   } catch (e) {
     // Optional: Log the error
   }
