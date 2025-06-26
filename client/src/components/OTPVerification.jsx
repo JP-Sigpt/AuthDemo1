@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { verifyOtp, verifyLoginOtp } from "../services/api.otp.js";
+import PropTypes from "prop-types";
 
 const OtpVerificationForm = ({ email, isLoginOtp = false }) => {
 	const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -63,6 +64,11 @@ const OtpVerificationForm = ({ email, isLoginOtp = false }) => {
 			</button>
 		</form>
 	);
+};
+
+OtpVerificationForm.propTypes = {
+	email: PropTypes.string.isRequired,
+	isLoginOtp: PropTypes.bool,
 };
 
 export default OtpVerificationForm;
