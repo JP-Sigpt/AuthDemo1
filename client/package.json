@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "jest --config jest.config.cjs",
+    "test": "jest --config jest.config.js",
     "test:unit": "jest --config jest.config.cjs --selectProjects client",
     "test:e2e": "jest --config jest.config.cjs --selectProjects e2e",
     "test:e2e:windows": "jest --config jest.config.cjs --selectProjects e2e",

@@ -1,19 +1,23 @@
-// jest.setup.js
-const { TextEncoder, TextDecoder } = require("util");
+// jest.setup.js (ESM-compatible)
+import { TextEncoder, TextDecoder } from "util";
+import { setTimeout } from "timers/promises";
 
 globalThis.TextEncoder = TextEncoder;
 globalThis.TextDecoder = TextDecoder;
 
 if (typeof globalThis.fetch === "undefined") {
   try {
-    globalThis.fetch = require("node-fetch");
+    const fetch = await import("node-fetch");
+    globalThis.fetch = fetch.default;
   } catch (e) {
-    // Optional: Log the error
+    console.warn("⚠️ Failed to polyfill fetch:", e.message);
   }
 }
 
+// Jest environment config
 jest.setTimeout(30000);
 
+// Handle unhandled promise rejections
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });

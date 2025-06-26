@@ -1,3 +1,5 @@
+// jest.e2e.setup.js
+
 import { TextEncoder, TextDecoder } from "util";
 
 globalThis.TextEncoder = TextEncoder;
