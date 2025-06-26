@@ -12,7 +12,7 @@ export default [
     },
     rules: {
       ...js.configs.recommended.rules,
-      "no-console": "off", // allow console.log
+      "no-console": "off",
       "no-unused-vars": [
         "warn",
         {
@@ -22,6 +22,22 @@ export default [
           argsIgnorePattern: "^_",
         },
       ],
+    },
+  },
+
+  // Jest support for test files
+  {
+    files: ["**/*.test.js", "**/__tests__/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
+    },
+    rules: {
+      "no-unused-vars": "off", // avoid false positives in tests
     },
   },
 ];
