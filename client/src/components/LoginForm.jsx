@@ -145,9 +145,9 @@ const LoginForm = ({ onSuccess, accessToken }) => {
             {showPassword ? <FiEyeOff /> : <FiEye />}
           </div>
           {errors.password && <p className="text-red-500 mt-1">{errors.password.message}</p>}
-          {/* <div className="text-right mt-1">
+          <div className="text-right mt-1">
             <Link to="/forgot-password" className="text-blue-500 text-sm hover:underline">Forgot Password?</Link>
-          </div> */}
+          </div>
         </div>
 
         <div className="w-full">
