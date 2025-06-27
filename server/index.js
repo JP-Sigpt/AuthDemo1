@@ -69,8 +69,8 @@ const initializeApp = async () => {
   try {
     await connectDB();
 
-    // Only start the server if not in test mode
-    if (process.env.NODE_ENV !== "test") {
+    // Start the server if not in test mode OR if we're in CI environment
+    if (process.env.NODE_ENV !== "test" || process.env.CI === "true") {
       const PORT = process.env.PORT || 7001;
       app.listen(PORT, () => {
         logger.info(`Server running on port ${PORT}`);
@@ -80,7 +80,7 @@ const initializeApp = async () => {
     return app;
   } catch (error) {
     logger.error("Failed to initialize application:", error);
-    if (process.env.NODE_ENV !== "test") {
+    if (process.env.NODE_ENV !== "test" || process.env.CI === "true") {
       process.exit(1);
     }
     throw error;
