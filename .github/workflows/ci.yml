@@ -31,6 +31,8 @@ jobs:
       SERVER_URL: http://localhost:7001
       NODE_ENV: test
       SERVER_NODE_ENV: production
+      EMAIL_USER: test@example.com
+      EMAIL_PASS: testpassword123
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
