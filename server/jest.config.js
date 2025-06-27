@@ -38,6 +38,10 @@ export default {
 
   // Coverage reporters
   coverageReporters: ["text", "lcov", "clover"],
+
+  // Handle E2E tests in CI
+  testPathIgnorePatterns:
+    process.env.CI === "true" ? ["<rootDir>/tests/selenium.e2e.test.js"] : [],
 };
 
 // import dotenv from "dotenv";
