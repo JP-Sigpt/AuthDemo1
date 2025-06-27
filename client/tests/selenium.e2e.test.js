@@ -192,7 +192,7 @@ describe("E2E Tests", () => {
         );
         if (errorElements.length > 0) {
           const errorText = await errorElements[0].getText();
-          console.log("Login error message:", errorText);
+          // console.log("Login error message:", errorText);
         }
 
         // Wait for OTP input (longer in CI)
