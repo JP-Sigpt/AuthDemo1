@@ -239,15 +239,13 @@ jobs:
           NODE_ENV: test
         continue-on-error: true
 
-      - name: Upload server logs on failure
-        if: failure()
+      - name: Upload server logs
         uses: actions/upload-artifact@v4
         with:
           name: server-logs
           path: server/server.log
 
-      - name: Upload client logs on failure
-        if: failure()
+      - name: Upload client logs
         uses: actions/upload-artifact@v4
         with:
           name: client-logs

@@ -182,7 +182,7 @@ describe("E2E Tests", () => {
         console.log("Clicked login, waiting for OTP input...");
 
         const errorElements = await driver.findElements(
-          By.css(".error-message-class")
+          By.css(".text-red-500")
         );
         if (errorElements.length > 0) {
           const errorText = await errorElements[0].getText();
