@@ -12,8 +12,13 @@ dotenv.config({ path: path.resolve(".env") });
 
 // Set fallback environment variables if not present
 if (!process.env.MONGO_DB_URL) {
-  process.env.MONGO_DB_URL =
-    "mongodb+srv://jpanimenaruto27:ZppnpHrTycxzBELE@cluster0.xnuvsfk.mongodb.net/mfa-auth-db?retryWrites=true&w=majority";
+  // Use local MongoDB for CI, Atlas for development
+  if (process.env.CI === "true") {
+    process.env.MONGO_DB_URL = "mongodb://localhost:27017/mfa-auth-db";
+  } else {
+    process.env.MONGO_DB_URL =
+      "mongodb+srv://jpanimenaruto27:ZppnpHrTycxzBELE@cluster0.xnuvsfk.mongodb.net/mfa-auth-db?retryWrites=true&w=majority";
+  }
 }
 
 if (!process.env.PORT) {

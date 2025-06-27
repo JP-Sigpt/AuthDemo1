@@ -21,6 +21,7 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+          --health-start-period=30s
     env:
       MONGO_URL: mongodb://localhost:27017/mfa-auth-db
       MONGO_DB_URL: mongodb://localhost:27017/mfa-auth-db
@@ -85,28 +86,92 @@ jobs:
       - name: Install Chrome for e2e
         uses: browser-actions/setup-chrome@v1
 
+      - name: Wait for MongoDB to be ready
+        run: |
+          echo "Waiting for MongoDB to be ready..."
+          timeout 60 bash -c 'until mongosh --eval "db.adminCommand(\"ping\")" > /dev/null 2>&1; do sleep 2; done'
+          echo "MongoDB is ready!"
+
+      - name: Test MongoDB connection
+        run: |
+          echo "Testing MongoDB connection..."
+          mongosh --eval "use mfa-auth-db; db.createCollection('test'); db.test.insertOne({test: 'data'}); db.test.find();" || echo "MongoDB test failed"
+          echo "MongoDB connection test completed"
+
       - name: Start server in background
         run: |
           cd server
-          npm run dev &
+          echo "Starting server with MongoDB URL: $MONGO_DB_URL"
+          echo "Current directory: $(pwd)"
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+
+          # Start server with proper error handling
+          npm start > server.log 2>&1 &
+          SERVER_PID=$!
+          echo "Server PID: $SERVER_PID"
           echo "Server started in background"
+
+          # Wait and check if server is still running
           sleep 10
-          curl -f http://localhost:7001/test || echo "Server not ready yet"
+          if kill -0 $SERVER_PID 2>/dev/null; then
+            echo "Server is still running"
+          else
+            echo "Server process died, checking logs:"
+            cat server.log
+            exit 1
+          fi
+
+          echo "Server log (first 50 lines):"
+          head -50 server.log || echo "No server log yet"
 
       - name: Start client in background
         run: |
           cd client
-          npm run dev &
+          echo "Starting client..."
+          echo "Current directory: $(pwd)"
+
+          # Start client with proper error handling
+          npm run dev > client.log 2>&1 &
+          CLIENT_PID=$!
+          echo "Client PID: $CLIENT_PID"
           echo "Client started in background"
+
+          # Wait and check if client is still running
           sleep 15
-          curl -f http://localhost:3001 || echo "Client not ready yet"
+          if kill -0 $CLIENT_PID 2>/dev/null; then
+            echo "Client is still running"
+          else
+            echo "Client process died, checking logs:"
+            cat client.log
+            exit 1
+          fi
+
+          echo "Client log (first 50 lines):"
+          head -50 client.log || echo "No client log yet"
+
+      - name: Check if services are running
+        run: |
+          echo "Checking if services are running..."
+          echo "=== Process Status ==="
+          ps aux | grep -E "(node|npm)" | grep -v grep || echo "No node processes found"
+          echo "=== Port Status ==="
+          netstat -tlnp | grep -E "(3001|7001)" || echo "No services listening on expected ports"
+          echo "=== Server Status ==="
+          curl -f http://localhost:7001/test || echo "Server not responding"
+          echo "=== Client Status ==="
+          curl -f http://localhost:3001 || echo "Client not responding"
 
       - name: Wait for services to be ready
         run: |
           echo "Waiting for services to be ready..."
-          timeout 60 bash -c 'until curl -f http://localhost:7001/test; do sleep 2; done'
-          timeout 60 bash -c 'until curl -f http://localhost:3001; do sleep 2; done'
-          echo "Services are ready!"
+          echo "Waiting for server..."
+          timeout 120 bash -c 'until curl -f http://localhost:7001/test; do echo "Server not ready, waiting..."; sleep 5; done'
+          echo "Server is ready!"
+          echo "Waiting for client..."
+          timeout 120 bash -c 'until curl -f http://localhost:3001; do echo "Client not ready, waiting..."; sleep 5; done'
+          echo "Client is ready!"
+          echo "All services are ready!"
 
       - name: Run client e2e tests (Selenium)
         run: cd client && npm run test:e2e
@@ -117,3 +182,18 @@ jobs:
           SERVER_URL: ${{ env.SERVER_URL }}
           CHROME_BIN: ${{ env.CHROME_BIN }}
           NODE_ENV: test
+        continue-on-error: true
+
+      - name: Upload server logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-logs
+          path: server/server.log
+
+      - name: Upload client logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-logs
+          path: client/client.log

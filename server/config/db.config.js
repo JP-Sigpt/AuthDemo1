@@ -6,6 +6,8 @@ const connectDb = async () => {
 
     console.log("Attempting to connect to MongoDB...");
     console.log("Node.js version:", process.version);
+    console.log("Environment:", process.env.NODE_ENV);
+    console.log("CI:", process.env.CI);
 
     // For Node.js 22+, try a simpler connection approach
     const connectionOptions = {
@@ -27,6 +29,13 @@ const connectDb = async () => {
       // Enable buffering for tests, disable for production
       bufferCommands: process.env.NODE_ENV === "test" ? true : false,
     };
+
+    // For local MongoDB in CI, use simpler options
+    if (process.env.CI === "true" && mongoUrl.includes("localhost")) {
+      console.log("Using local MongoDB configuration for CI");
+      connectionOptions.retryWrites = false;
+      connectionOptions.w = 1;
+    }
 
     const db = await mongoose.connect(mongoUrl, connectionOptions);
 
