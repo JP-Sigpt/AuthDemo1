@@ -168,11 +168,19 @@ describe("E2E Tests", () => {
         await driver
           .findElement(By.name("password"))
           .sendKeys(TEST_USER.password);
-        await driver.findElement(By.css('button[type="submit"]')).click();
 
+        // Wait for the login button to be enabled/clickable
+        const loginBtn = await driver.findElement(
+          By.css('button[type="submit"]')
+        );
+        await driver.wait(until.elementIsEnabled(loginBtn), 5000);
+        await loginBtn.click();
+
+        // Wait for OTP input (longer in CI)
+        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 30000 : 10000;
         await driver.wait(
           until.elementLocated(By.css('input[placeholder="Enter code"]')),
-          10000
+          OTP_WAIT_TIMEOUT
         );
 
         try {
@@ -204,6 +212,16 @@ describe("E2E Tests", () => {
           .click();
 
         await driver.wait(until.urlContains("/"), 15000);
+      } catch (error) {
+        // Optionally take a screenshot for debugging
+        if (driver && process.env.CI === "true") {
+          await driver
+            .takeScreenshot()
+            .then((image) =>
+              require("fs").writeFileSync("selenium_error.png", image, "base64")
+            );
+        }
+        throw error;
       } finally {
         await driver.quit();
       }
