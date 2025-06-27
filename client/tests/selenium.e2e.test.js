@@ -177,7 +177,7 @@ describe("E2E Tests", () => {
         await loginBtn.click();
 
         // Wait for OTP input (longer in CI)
-        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 30000 : 10000;
+        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 90000 : 10000;
         await driver.wait(
           until.elementLocated(By.css('input[placeholder="Enter code"]')),
           OTP_WAIT_TIMEOUT
