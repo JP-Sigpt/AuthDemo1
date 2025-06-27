@@ -23,9 +23,12 @@ jobs:
           --health-retries=5
     env:
       MONGO_URL: mongodb://localhost:27017/mfa-auth-db
+      MONGO_DB_URL: mongodb://localhost:27017/mfa-auth-db
       CI: true
       CHROME_BIN: /usr/bin/google-chrome
       BASE_URL: http://localhost:3001
+      SERVER_URL: http://localhost:7001
+      NODE_ENV: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -82,9 +85,35 @@ jobs:
       - name: Install Chrome for e2e
         uses: browser-actions/setup-chrome@v1
 
+      - name: Start server in background
+        run: |
+          cd server
+          npm run dev &
+          echo "Server started in background"
+          sleep 10
+          curl -f http://localhost:7001/test || echo "Server not ready yet"
+
+      - name: Start client in background
+        run: |
+          cd client
+          npm run dev &
+          echo "Client started in background"
+          sleep 15
+          curl -f http://localhost:3001 || echo "Client not ready yet"
+
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for services to be ready..."
+          timeout 60 bash -c 'until curl -f http://localhost:7001/test; do sleep 2; done'
+          timeout 60 bash -c 'until curl -f http://localhost:3001; do sleep 2; done'
+          echo "Services are ready!"
+
       - name: Run client e2e tests (Selenium)
         run: cd client && npm run test:e2e
         env:
           MONGO_URL: ${{ env.MONGO_URL }}
+          MONGO_DB_URL: ${{ env.MONGO_DB_URL }}
           BASE_URL: ${{ env.BASE_URL }}
+          SERVER_URL: ${{ env.SERVER_URL }}
           CHROME_BIN: ${{ env.CHROME_BIN }}
+          NODE_ENV: test

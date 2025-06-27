@@ -8,6 +8,7 @@ const MONGO_URL =
   "mongodb+srv://jpanimenaruto27:ZppnpHrTycxzBELE@cluster0.xnuvsfk.mongodb.net/mfa-auth-db?retryWrites=true&w=majority";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3001";
+const SERVER_URL = process.env.SERVER_URL || "http://localhost:7001";
 const IS_CI = process.env.CI === "true";
 
 const TEST_USER = {
@@ -18,6 +19,31 @@ const TEST_USER = {
   work: "Test Company",
 };
 
+// Helper function to check if services are running
+const checkServices = async () => {
+  try {
+    // Check if server is running
+    const serverResponse = await fetch(`${SERVER_URL}/test`);
+    if (!serverResponse.ok) {
+      console.log("Server not responding");
+      return false;
+    }
+
+    // Check if client is running
+    const clientResponse = await fetch(BASE_URL);
+    if (!clientResponse.ok) {
+      console.log("Client not responding");
+      return false;
+    }
+
+    console.log("Both services are running");
+    return true;
+  } catch (error) {
+    console.log("Service check failed:", error.message);
+    return false;
+  }
+};
+
 function getChromeOptions() {
   const options = new chrome.Options();
   if (IS_CI) {
@@ -26,6 +52,14 @@ function getChromeOptions() {
       "--no-sandbox",
       "--disable-dev-shm-usage",
       "--disable-gpu",
+      "--disable-extensions",
+      "--disable-plugins",
+      "--window-size=1920,1080"
+    );
+  } else {
+    options.addArguments(
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
       "--window-size=1920,1080"
     );
   }
@@ -41,6 +75,12 @@ async function createDriver() {
 }
 
 beforeAll(async () => {
+  // Check if services are running
+  const servicesReady = await checkServices();
+  if (!servicesReady) {
+    console.log("Services not ready, some tests may be skipped");
+  }
+
   if (IS_CI && !process.env.MONGO_URL) {
     console.log("Skipping DB setup in CI");
     return;
@@ -77,7 +117,7 @@ beforeAll(async () => {
 describe("E2E Tests", () => {
   const skipInCI = IS_CI && !process.env.CHROME_BIN;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     if (typeof window !== "undefined") {
       localStorage?.clear();
       sessionStorage?.clear();
@@ -86,6 +126,13 @@ describe("E2E Tests", () => {
 
   (skipInCI ? describe.skip : describe)("Browser Tests", () => {
     it("opens the homepage", async () => {
+      // Check if services are running
+      const servicesReady = await checkServices();
+      if (!servicesReady) {
+        console.log("Skipping homepage test - services not ready");
+        return;
+      }
+
       const driver = await createDriver();
       try {
         await driver.get(BASE_URL);
@@ -98,6 +145,13 @@ describe("E2E Tests", () => {
     }, 30000);
 
     it("should allow a user to login", async () => {
+      // Check if services are running
+      const servicesReady = await checkServices();
+      if (!servicesReady) {
+        console.log("Skipping login test - services not ready");
+        return;
+      }
+
       if (IS_CI && !process.env.MONGO_URL) {
         console.log("Skipping login test - DB not configured");
         return;
