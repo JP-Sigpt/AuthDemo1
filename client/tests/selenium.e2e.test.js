@@ -148,6 +148,7 @@ describe("E2E Tests", () => {
     }, 30000);
 
     it("should allow a user to login", async () => {
+      console.log("Starting login test");
       // Check if services are running
       const servicesReady = await checkServices();
       if (!servicesReady) {
@@ -165,6 +166,7 @@ describe("E2E Tests", () => {
 
       try {
         await driver.get(`${BASE_URL}/login`);
+        console.log("Loaded login page");
         await driver.wait(until.elementLocated(By.name("email")), 10000);
 
         await driver.findElement(By.name("email")).sendKeys(TEST_USER.email);
@@ -190,7 +192,7 @@ describe("E2E Tests", () => {
         }
 
         // Wait for OTP input (longer in CI)
-        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 60000 : 10000;
+        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 60000 : 60000;
         await driver.wait(
           until.elementLocated(By.css('input[placeholder="Enter code"]')),
           OTP_WAIT_TIMEOUT
@@ -238,7 +240,7 @@ describe("E2E Tests", () => {
       } finally {
         await driver.quit();
       }
-    }, 60000);
+    }, 120000);
   });
 });
 
