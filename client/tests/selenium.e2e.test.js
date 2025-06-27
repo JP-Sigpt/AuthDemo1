@@ -107,6 +107,9 @@ beforeAll(async () => {
       { upsert: true }
     );
 
+    const userDoc = await users.findOne({ email: TEST_USER.email });
+    console.log("Test user in DB after upsert:", userDoc);
+
     await client.close();
   } catch (error) {
     console.error("Database setup failed:", error);
@@ -176,8 +179,18 @@ describe("E2E Tests", () => {
         await driver.wait(until.elementIsEnabled(loginBtn), 5000);
         await loginBtn.click();
 
+        console.log("Clicked login, waiting for OTP input...");
+
+        const errorElements = await driver.findElements(
+          By.css(".error-message-class")
+        );
+        if (errorElements.length > 0) {
+          const errorText = await errorElements[0].getText();
+          console.log("Login error message:", errorText);
+        }
+
         // Wait for OTP input (longer in CI)
-        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 90000 : 10000;
+        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 60000 : 10000;
         await driver.wait(
           until.elementLocated(By.css('input[placeholder="Enter code"]')),
           OTP_WAIT_TIMEOUT
@@ -225,7 +238,7 @@ describe("E2E Tests", () => {
       } finally {
         await driver.quit();
       }
-    }, 120000);
+    }, 60000);
   });
 });
 
