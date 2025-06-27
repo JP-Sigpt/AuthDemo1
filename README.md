@@ -45,10 +45,3 @@ A full-stack multi-factor authentication (MFA) demo app with React (frontend) an
 - Run all tests: See `client/README.md` and `server/README.md` for details.
 - CI runs tests and lint on every push/PR.
 
-## Contribution
-
-- Fork, branch, and submit PRs. All pushes require review.
-
-## License
-
-MIT
