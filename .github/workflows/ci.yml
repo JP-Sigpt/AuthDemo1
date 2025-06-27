@@ -86,14 +86,6 @@ jobs:
       - name: Install Chrome for e2e
         uses: browser-actions/setup-chrome@v1
 
-      - name: Install MongoDB tools
-        run: |
-          echo "Installing MongoDB tools..."
-          sudo apt-get update
-          sudo apt-get install -y mongodb-clients || echo "MongoDB tools already installed"
-          mongosh --version || echo "mongosh not available, trying mongo..."
-          mongo --version || echo "mongo not available"
-
       - name: Check MongoDB service status
         run: |
           echo "Checking MongoDB service status..."
@@ -109,37 +101,34 @@ jobs:
           echo "Waiting for MongoDB to be ready..."
           echo "Checking MongoDB service status..."
 
-          # Function to check MongoDB
-          check_mongo() {
-            if command -v mongosh >/dev/null 2>&1; then
-              mongosh --eval "db.adminCommand('ping')" > /dev/null 2>&1
-            elif command -v mongo >/dev/null 2>&1; then
-              mongo --eval "db.adminCommand('ping')" > /dev/null 2>&1
-            else
-              return 1
-            fi
-          }
-
-          # Wait for MongoDB to start up
+          # Wait for MongoDB to start up - use a simpler approach
           for i in {1..30}; do
             echo "Attempt $i: Checking MongoDB..."
-            if check_mongo; then
-              echo "MongoDB is ready!"
-              break
+            
+            # Check if MongoDB is listening on port 27017
+            if netstat -tlnp | grep -q ":27017"; then
+              echo "MongoDB port is listening"
+              
+              # Try a simple connection test
+              if timeout 5 bash -c "</dev/tcp/localhost/27017"; then
+                echo "MongoDB is ready!"
+                break
+              fi
             fi
+            
             echo "MongoDB not ready yet, waiting 2 seconds..."
             sleep 2
           done
 
           # Final check
-          if check_mongo; then
+          if timeout 5 bash -c "</dev/tcp/localhost/27017"; then
             echo "MongoDB is ready!"
           else
             echo "MongoDB failed to start within timeout"
             echo "Checking if MongoDB process is running:"
             ps aux | grep mongo || echo "No MongoDB process found"
             echo "Checking MongoDB service logs:"
-            docker logs $(docker ps -q --filter "ancestor=mongo:6.0") 2>/dev/null || echo "No MongoDB container logs found"
+            docker logs $(docker ps -q --filter "ancestor=mongo:6.0") 2>/dev/null | tail -20 || echo "No MongoDB container logs found"
             exit 1
           fi
 
@@ -147,20 +136,13 @@ jobs:
         run: |
           echo "Testing MongoDB connection..."
 
-          # Function to test MongoDB
-          test_mongo() {
-            if command -v mongosh >/dev/null 2>&1; then
-              mongosh --eval "use mfa-auth-db; db.createCollection('test'); db.test.insertOne({test: 'data'}); db.test.find();"
-            elif command -v mongo >/dev/null 2>&1; then
-              mongo --eval "use mfa-auth-db; db.createCollection('test'); db.test.insertOne({test: 'data'}); db.test.find();"
-            else
-              echo "No MongoDB client available"
-              return 1
-            fi
-          }
-
-          test_mongo || echo "MongoDB test failed"
-          echo "MongoDB connection test completed"
+          # Simple connection test
+          if timeout 5 bash -c "</dev/tcp/localhost/27017"; then
+            echo "MongoDB connection test successful"
+          else
+            echo "MongoDB connection test failed"
+            exit 1
+          fi
 
       - name: Start server in background
         run: |
