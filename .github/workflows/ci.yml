@@ -21,7 +21,7 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-          --health-start-period=30s
+          --health-start-period=60s
     env:
       MONGO_URL: mongodb://localhost:27017/mfa-auth-db
       MONGO_DB_URL: mongodb://localhost:27017/mfa-auth-db
@@ -86,16 +86,80 @@ jobs:
       - name: Install Chrome for e2e
         uses: browser-actions/setup-chrome@v1
 
+      - name: Install MongoDB tools
+        run: |
+          echo "Installing MongoDB tools..."
+          sudo apt-get update
+          sudo apt-get install -y mongodb-clients || echo "MongoDB tools already installed"
+          mongosh --version || echo "mongosh not available, trying mongo..."
+          mongo --version || echo "mongo not available"
+
+      - name: Check MongoDB service status
+        run: |
+          echo "Checking MongoDB service status..."
+          echo "Docker containers:"
+          docker ps | grep mongo || echo "No MongoDB container found"
+          echo "MongoDB service logs:"
+          docker logs $(docker ps -q --filter "ancestor=mongo:6.0") 2>/dev/null | tail -20 || echo "No MongoDB logs found"
+          echo "Port 27017 status:"
+          netstat -tlnp | grep 27017 || echo "Port 27017 not listening"
+
       - name: Wait for MongoDB to be ready
         run: |
           echo "Waiting for MongoDB to be ready..."
-          timeout 60 bash -c 'until mongosh --eval "db.adminCommand(\"ping\")" > /dev/null 2>&1; do sleep 2; done'
-          echo "MongoDB is ready!"
+          echo "Checking MongoDB service status..."
+
+          # Function to check MongoDB
+          check_mongo() {
+            if command -v mongosh >/dev/null 2>&1; then
+              mongosh --eval "db.adminCommand('ping')" > /dev/null 2>&1
+            elif command -v mongo >/dev/null 2>&1; then
+              mongo --eval "db.adminCommand('ping')" > /dev/null 2>&1
+            else
+              return 1
+            fi
+          }
+
+          # Wait for MongoDB to start up
+          for i in {1..30}; do
+            echo "Attempt $i: Checking MongoDB..."
+            if check_mongo; then
+              echo "MongoDB is ready!"
+              break
+            fi
+            echo "MongoDB not ready yet, waiting 2 seconds..."
+            sleep 2
+          done
+
+          # Final check
+          if check_mongo; then
+            echo "MongoDB is ready!"
+          else
+            echo "MongoDB failed to start within timeout"
+            echo "Checking if MongoDB process is running:"
+            ps aux | grep mongo || echo "No MongoDB process found"
+            echo "Checking MongoDB service logs:"
+            docker logs $(docker ps -q --filter "ancestor=mongo:6.0") 2>/dev/null || echo "No MongoDB container logs found"
+            exit 1
+          fi
 
       - name: Test MongoDB connection
         run: |
           echo "Testing MongoDB connection..."
-          mongosh --eval "use mfa-auth-db; db.createCollection('test'); db.test.insertOne({test: 'data'}); db.test.find();" || echo "MongoDB test failed"
+
+          # Function to test MongoDB
+          test_mongo() {
+            if command -v mongosh >/dev/null 2>&1; then
+              mongosh --eval "use mfa-auth-db; db.createCollection('test'); db.test.insertOne({test: 'data'}); db.test.find();"
+            elif command -v mongo >/dev/null 2>&1; then
+              mongo --eval "use mfa-auth-db; db.createCollection('test'); db.test.insertOne({test: 'data'}); db.test.find();"
+            else
+              echo "No MongoDB client available"
+              return 1
+            fi
+          }
+
+          test_mongo || echo "MongoDB test failed"
           echo "MongoDB connection test completed"
 
       - name: Start server in background
