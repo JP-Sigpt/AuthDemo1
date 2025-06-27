@@ -52,6 +52,3 @@ VITE_APP_VERSION=1.0.0
 - If analytics events do not appear, check your `.env` and Plausible setup.
 - For E2E tests, ensure both client and server are running.
 
-## License
-
-MIT
