@@ -1,6 +1,16 @@
-// jest.setup.js (CommonJS-friendly)
-const { TextEncoder, TextDecoder } = require("util");
+// server/jest.setup.js (CommonJS-friendly)
+const { config } = require("dotenv");
+const path = require("path");
 
+// Explicitly load .env.test
+config({ path: path.resolve(__dirname, ".env.test") });
+
+console.log("Loaded envs:", {
+  MONGO_DB_URL: process.env.MONGO_DB_URL,
+  EMAIL_USER: process.env.EMAIL_USER,
+});
+
+const { TextEncoder, TextDecoder } = require("util");
 globalThis.TextEncoder = TextEncoder;
 globalThis.TextDecoder = TextDecoder;
 
@@ -8,7 +18,7 @@ if (typeof globalThis.fetch === "undefined") {
   try {
     globalThis.fetch = require("node-fetch");
   } catch (e) {
-    console.warn("⚠️ Failed to polyfill fetch:", e.message);
+    console.warn("Failed to polyfill fetch:", e.message);
   }
 }
 
