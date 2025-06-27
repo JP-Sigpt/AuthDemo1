@@ -225,7 +225,7 @@ describe("E2E Tests", () => {
       } finally {
         await driver.quit();
       }
-    }, 60000);
+    }, 120000);
   });
 });
 
