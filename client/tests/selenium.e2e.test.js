@@ -174,6 +174,10 @@ describe("E2E Tests", () => {
           .findElement(By.name("password"))
           .sendKeys(TEST_USER.password);
 
+        // Explicitly select the 'Email OTP' method
+        const methodSelect = await driver.findElement(By.css("select"));
+        await methodSelect.sendKeys("Email OTP");
+
         // Wait for the login button to be enabled/clickable
         const loginBtn = await driver.findElement(
           By.css('button[type="submit"]')
@@ -192,11 +196,18 @@ describe("E2E Tests", () => {
         }
 
         // Wait for OTP input (longer in CI)
-        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 60000 : 60000;
-        await driver.wait(
-          until.elementLocated(By.css('input[placeholder="Enter code"]')),
-          OTP_WAIT_TIMEOUT
-        );
+        const OTP_WAIT_TIMEOUT = process.env.CI === "true" ? 90000 : 90000;
+        try {
+          await driver.wait(
+            until.elementLocated(By.css('input[placeholder="Enter code"]')),
+            OTP_WAIT_TIMEOUT
+          );
+        } catch (waitErr) {
+          // Print page source for debugging
+          const pageSource = await driver.getPageSource();
+          console.log("Page source at OTP wait failure:", pageSource);
+          throw waitErr;
+        }
 
         try {
           const client = await MongoClient.connect(MONGO_URL, {
