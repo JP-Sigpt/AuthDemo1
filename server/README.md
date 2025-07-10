@@ -58,6 +58,4 @@ PORT=7001
 - JWTs are used for session management
 - CSRF and brute-force protection: To be added in advanced version
 
-## License
 
-MIT
